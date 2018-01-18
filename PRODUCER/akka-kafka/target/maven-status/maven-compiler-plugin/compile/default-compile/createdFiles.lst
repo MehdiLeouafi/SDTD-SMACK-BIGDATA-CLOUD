@@ -1,0 +1,4 @@
+com/sdtd/producer/akka_kafka/Monnaie.class
+com/sdtd/producer/akka_kafka/ClientApp.class
+com/sdtd/producer/akka_kafka/AkkaHttpJavaClient.class
+com/sdtd/producer/akka_kafka/SettingsImpl.class
