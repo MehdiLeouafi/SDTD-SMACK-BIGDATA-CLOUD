@@ -1,0 +1,5 @@
+- name: Downloading Spark binary
+  unarchive:
+    src: http://apache.mediamirrors.org/spark/spark-2.2.1/spark-2.2.1-bin-hadoop2.7.tgz
+    dest: /home/ubuntu/
+    remote_src: yes

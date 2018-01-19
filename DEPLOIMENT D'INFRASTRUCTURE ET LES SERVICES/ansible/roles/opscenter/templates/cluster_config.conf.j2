@@ -1,0 +1,18 @@
+[jmx]
+port = 7199
+
+[kerberos_client_principals]
+
+[kerberos]
+
+[agents]
+
+[kerberos_hostnames]
+
+[kerberos_services]
+
+[cassandra]
+seed_hosts = {% for host in groups['cassandra_public_ips'] %}{{ host }}{% if not loop.last %},{% endif %}{% endfor %}
+
+api_port = 9160
+

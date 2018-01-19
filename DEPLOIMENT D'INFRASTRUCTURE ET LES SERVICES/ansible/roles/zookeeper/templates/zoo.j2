@@ -1,0 +1,8 @@
+tickTime=2000
+dataDir=/data/zookeeper
+clientPort=2181
+initLimit=5
+syncLimit=2
+{% for zookeeper_node in vars['play_hosts'] %}
+  server.{{ loop.index }}={{ zookeeper_node }}:2888:3888
+{% endfor %}

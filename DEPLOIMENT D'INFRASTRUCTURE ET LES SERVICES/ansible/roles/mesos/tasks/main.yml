@@ -1,0 +1,12 @@
+- name: add mesos apt key by id
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: E56151BF
+
+- name: add mesosphere repository
+  apt_repository:
+    repo: deb http://repos.mesosphere.io/ubuntu xenial main update_cache=yes
+
+- name: install mesos
+  apt: name=mesos update_cache=yes state=latest
+ 

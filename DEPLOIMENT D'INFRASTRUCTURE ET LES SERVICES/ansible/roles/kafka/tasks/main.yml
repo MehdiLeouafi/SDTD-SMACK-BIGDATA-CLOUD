@@ -1,0 +1,27 @@
+- name: Create kafka directory
+  file: 
+    path: "{{ kafka_directory }}"
+    state: directory
+
+
+- name: Download and unarchive kafka binary
+  unarchive:
+    src: "{{ kafka_url }}"
+    dest: "{{ kafka_directory }}"
+    remote_src: yes # To tell ansible that the file will be downloaded from a remote server.
+
+- name: Set broker id
+  replace: 
+    dest: /home/ubuntu/kafka/kafka_{{version}}/config/server.properties 
+    regexp: 'broker.id=0' 
+    replace: "broker.id={{ groups['kafka'].index(inventory_hostname)+1 }}"
+
+- name: Set zookeeper hosts
+  replace: 
+    dest: /home/ubuntu/kafka/kafka_{{version}}/config/server.properties 
+    regexp: "zookeeper.connect=localhost:2181"
+    replace: "zookeeper.connect={{ groups['zookeeper'] | join(\":2181,\") }}:2181"
+
+- name: start kafka server
+  shell: |
+     export _JAVA_OPTIONS="-Xms256m -Xmx512m" && nohup "{{kafka_bin_directory }}"/kafka-server-start.sh "{{ kafka_conf_directory }}"/server.properties &

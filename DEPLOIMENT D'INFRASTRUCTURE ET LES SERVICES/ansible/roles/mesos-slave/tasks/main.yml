@@ -1,0 +1,11 @@
+- name: stop mesos master on slave
+  service: name=mesos-master state=stopped enabled=no
+
+- name: stop zookeeper
+  service: name=zookeeper state=stopped enabled=no
+
+- name: Zookeeper entry points
+  template: src=templates/mesos-zk.j2 dest=/etc/mesos/zk
+
+- name: restart mesos slave service
+  service: name=mesos-slave state=restarted

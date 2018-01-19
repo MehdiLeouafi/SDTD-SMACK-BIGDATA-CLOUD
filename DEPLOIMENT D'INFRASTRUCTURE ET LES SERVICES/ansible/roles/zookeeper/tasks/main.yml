@@ -1,0 +1,30 @@
+- name: Create zookeeper directory
+  file: 
+    path: /home/ubuntu/zookeeper
+    state: directory
+
+- name: Download and Unarchive zookeeper file 
+  unarchive:
+    src: "{{zookeeper_url}}"
+    dest: "{{zookeeper_directory}}"
+    remote_src: yes # To tell ansible that the file will be downloaded from a remote server.
+
+- name: Create zookeeper data directory
+  file: 
+    path: /data/zookeeper
+    state: directory
+
+
+- name: Configure myid file
+  shell: echo {{ groups['zookeeper'].index(inventory_hostname)+1 }} > /data/zookeeper/myid
+
+- name: Configure zookeeper
+  template: src=templates/zoo.j2 dest={{ zookeeper_conf_directory }}/zoo.cfg
+
+- name: launch zkServer.sh # Launch zookeeper server
+  shell: |
+     "{{zookeeper_bin_directory}}"/zkServer.sh start
+
+- name: launch zookeeper command line # Launch zookeeper client
+  shell: |
+     "{{zookeeper_bin_directory}}"/zkCli.sh start

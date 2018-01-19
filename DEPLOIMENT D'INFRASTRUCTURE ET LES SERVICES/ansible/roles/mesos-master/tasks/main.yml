@@ -1,0 +1,14 @@
+- name: stop mesos slave on master
+  service: name=mesos-slave state=stopped enabled=no
+
+- name: stop zookeeper
+  service: name=zookeeper state=stopped enabled=no
+
+- name: Zookeeper entry points
+  template: src=templates/mesos-zk.j2 dest=/etc/mesos/zk
+
+- name: change quorum to one
+  shell: echo 1 > /etc/mesos-master/quorum
+
+- name: restart mesos master service
+  service: name=mesos-master state=restarted

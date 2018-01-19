@@ -1,0 +1,20 @@
+- name: Create spark directory
+  file: 
+    path: "{{ spark_directory }}"
+    state: directory
+
+
+- name: Download and unarchive spark binary
+  unarchive:
+    src: "{{ spark_url }}"
+    dest: "{{ spark_directory }}"
+    remote_src: yes # To tell ansible that the file will be downloaded from a remote server.
+
+- name: export mesos library in load-spark-env
+  shell: echo export MESOS_NATIVE_JAVA_LIBRARY=/usr/lib/libmesos.so >> {{ spark_bin_directory }}/load-spark-env.sh  
+
+- name: export mesos library in spark-env
+  shell: echo export MESOS_NATIVE_JAVA_LIBRARY=/usr/lib/libmesos.so >> {{ spark_conf_directory }}/spark-env.sh
+
+- name: export spark default conf
+  template: src=spark-defaults-conf.j2 dest={{ spark_conf_directory }}/spark-defaults.conf

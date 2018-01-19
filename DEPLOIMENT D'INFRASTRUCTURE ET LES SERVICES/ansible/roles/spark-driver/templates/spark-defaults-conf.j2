@@ -1,0 +1,2 @@
+spark.master mesos://zk://{% for zookeeper_node in groups['zookeeper'] %}{{ zookeeper_node }}:2181{% if not loop.last %},{% endif %}{% endfor %}/mesos
+spark.mesos.executor.home /home/ubuntu/spark-2.2.1-bin-hadoop2.7

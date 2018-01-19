@@ -1,0 +1,89 @@
+---
+- name: Install and Configure utilities
+  hosts: utils_java_8
+  become: true
+  remote_user: ubuntu
+  roles:
+      - utils
+- name: Installing Zookeeper
+  hosts: zookeeper
+  become: true
+  vars:
+    - version: 3.4.10 
+    - zookeeper_url: http://apache.mediamirrors.org/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz
+    - zookeeper_directory: /home/ubuntu/zookeeper
+    - zookeeper_conf_directory: "{{ zookeeper_directory }}/zookeeper-{{version}}/conf"
+    - zookeeper_bin_directory: "{{ zookeeper_directory }}/zookeeper-{{version}}/bin"
+  remote_user: ubuntu
+  roles:
+      - zookeeper
+
+- name: Installing mesos master and spark driver
+  hosts: mesos_master
+  vars:
+    - version: 2.2.1-bin-hadoop2.7
+    - spark_url: http://apache.mediamirrors.org/spark/spark-2.2.1/spark-2.2.1-bin-hadoop2.7.tgz
+    - spark_directory: /home/ubuntu/spark
+    - spark_conf_directory: "{{ spark_directory }}/spark-{{version}}/conf"
+    - spark_bin_directory: "{{ spark_directory }}/spark-{{version}}/bin"
+  become: true
+  remote_user: ubuntu
+  roles:
+      - mesos
+      - mesos-master
+      - spark-driver
+
+- name: Installing mesos slave and spark executor
+  hosts: mesos_slave
+  vars:
+    - version: 2.2.1-bin-hadoop2.7
+    - spark_url: http://apache.mediamirrors.org/spark/spark-2.2.1/spark-2.2.1-bin-hadoop2.7.tgz
+    - spark_directory: /home/ubuntu/spark
+    - spark_conf_directory: "{{ spark_directory }}/spark-{{version}}/conf"
+    - spark_bin_directory: "{{ spark_directory }}/spark-{{version}}/bin"
+  become: true
+  remote_user: ubuntu
+  roles:
+      - mesos
+      - mesos-slave
+      - spark-executor
+
+- name: Installing kafka
+  hosts: kafka
+  vars:
+    - version: 2.11-1.0.0
+    - kafka_url: http://apache.mediamirrors.org/kafka/1.0.0/kafka_{{ version }}.tgz 
+    - kafka_directory: /home/ubuntu/kafka
+    - kafka_conf_directory: "{{ kafka_directory }}/kafka_{{ version }}/config"
+    - kafka_bin_directory: "{{ kafka_directory }}/kafka_{{ version }}/bin"
+  become: true
+  remote_user: ubuntu
+  roles:
+      - kafka
+
+- name: Installing and configuring opscenter
+  hosts: cassandra-opscenter
+  vars:
+    - node_name_prefix: no
+    - cluster_name: AWSCluster
+    - cluster_username: awstest
+    - cluster_password: toor
+  become: true
+  remote_user: ubuntu
+  roles:
+      - opscenter
+
+- name: Installing and configuring cassandra cluster
+  hosts: cassandra_nodes
+  vars: 
+    - node_name_prefix: no
+    - cluster_name: AWSCluster
+    - cluster_username: awstest
+    - cluster_password: toor
+  become: true
+  remote_user: ubuntu
+  roles:
+      - cassandra
+
+
+...

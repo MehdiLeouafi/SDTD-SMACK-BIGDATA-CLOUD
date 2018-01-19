@@ -1,0 +1,4 @@
+ALTER KEYSPACE system_auth WITH REPLICATION =
+  {'class' : 'NetworkTopologyStrategy', 'us-east' : 2};
+
+CREATE USER {{ cluster_username }} WITH PASSWORD '{{ cluster_password }}' SUPERUSER;
