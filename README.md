@@ -43,7 +43,7 @@ II - LANCER LE CAS D'UTILISATION
 	1- COPIER LES FICHIERS SUIVANT :  hosts ET les deux clé générées ( cluster_interconnection_key,deploy_keyY )  QUI SONT SUR le dossier "DEPLOIEMENT/terraform", ET VEUILLEZ LES METTRE  SUR LE DOSSIER
 	     "AUTOMATISATION USE CASE"
 
-		#cd Path_to_Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud_project/AUTOMATISATION USE CASE
+		#cd SDTD-SMACK-BIGDATA-CLOUD/AUTOMATISATION USE CASE
 
 		#cp DEPLOIEMENT/terraform/hosts .
 		#cp DEPLOIEMENT/terraform/deploy_cle .
