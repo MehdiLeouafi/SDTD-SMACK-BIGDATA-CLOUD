@@ -1,22 +1,47 @@
 # Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud
 
----------GUIDE D'INSTALLATION 
+------------------------------ GUIDE D'INSTALLATION ET D'UTILISATION 
 
-ETAPES A FAIRE POUR FAIRE MARCHER LE PROJET  :
-
-clone the project : 
-
-git clone https://github.com/Ghanouch/Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud.git
+Copier le projet sur votre rmachine : 
+#git clone https://github.com/Ghanouch/Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud.git
 
 
 I - LANCER LE DEPLOIEMENT ( README MEHDI)
 
+ENTRER SUR LE CHEMIN SUIVANT  : 
+#cd DEPLOIEMENT/terraform
 
+Guide d'utilisation du script:
+
+	1-Génerer 2 clé RSA une pour le bastion et l'autre pour le reste de la stack grâce à: "ssh-keygen"
+	  Vous pouvez choisir le nom que vous voulez, exemple : deployer et cluster_interconnection
+	  Elles doivent être mises dans le dossier "terraform"
+
+		#ssh-keygen
+
+	2-Ouvrir le fichier "secret.tfvars" dans le dossier "terraform" et remplir les champs suivants:
+	  + access_key et secret_key : respectivement la clé d'accès et la clé secrète de votre utilisateur AWS  
+	  + region: la région où le cluster va être déployé, exemple: "us-east-1"
+	  + ami: ami de la machine ubuntu 16.04 d'AWS, on la retrouve lorsqu'on essaie de créer manuellement une machine
+	  + cassandra_ami: même que "ami" mais celle de ubuntu 14.04
+	  + deployer_key_name: le nom de la clé publique utilisée pour le bastion
+	  + deployer_public_key: le contenu de la clé publique du bastion
+	  + cluster_key_name: le nom de la clé publique utilisée pour la stack
+	  + cluster_public_key: le contenu de la clé publique de la stack
+	  + cassandra_instance_type: la taille des machines cassandra (minimum medium)
+	  + opscenter_instace_type: la taille de la machine opscenter (minimum medium)
+
+	3-Ouvrir le fichier wrap-up.sh est remplir les champs indiqués (ceux des noms des clés privées)
+
+	4-Lancer le script wrap-up.sh en sudo si possible (parfois il faut des droits d'administrateur)
+
+######
 
 
 II - LANCER LE CAS D'UTILISATION
 
-	1- COPIER FICHIERS HOSTS + CLUSTER-INTERCONNEXTION + DEPLOY CLE  SUR  LE DOSSIER "AUTOMATISATION USE CASE"
+	1- COPIER LES FICHIERS SUIVANT :  hosts ET les deux clé générées ( cluster_interconnection_key,deploy_keyY )  QUI SONT SUR le dossier "DEPLOIEMENT/terraform", ET VEUILLEZ LES METTRE  SUR LE DOSSIER
+	     "AUTOMATISATION USE CASE"
 
 		#cd Path_to_Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud_project/AUTOMATISATION USE CASE
 
@@ -34,18 +59,16 @@ II - LANCER LE CAS D'UTILISATION
 
 			# PARAMS OF PRODUCER JOB
 
-			LIEN_JOB_PRODUCER="https://docs.google.com/uc?export=download&id=1QO4hABoVMplr_IKkZA87BesDWcRdRCdy"
 			BORNE_MINIMAL="0"
 			BORNE_MAXIMAL="25"
 			SPEED="2"
 
-			# PARAMS OF CONSUMER 
-			LIEN_JOB_CONSUMER="https://docs.google.com/uc?export=download&id=1R56-3o1JJk2tlMgxGVHR-9vYZSZmgjkw"
 
 		 2-2.- METTRE SUR LE DOSSIER "AUTOMATISATION USE CASE" LE JOB DE CONSUMER 
-		 	DEUX CHOIX  : 
 
-		 		2.1 TELECHERGER LE JOB SUR LE LIEN SUIVANT :
+		 	VOUS AVEZ DEUX CHOIX POUR L'AVOIR : 
+
+		 		2.1 TELECHERGER LE JOB QUI EST SUR LE LIEN SUIVANT :
 		 			http://www.mediafire.com/file/dd2dfyfkx9iyo9q/RDD_Crypto.jar
 
 		 		2.2 AVOIR LE JOB A PARTIR DU CODE SOURCE SUR LE DOSSIER : "CONSUMER/SparkKafka" PAR MAVEN 
@@ -60,7 +83,7 @@ II - LANCER LE CAS D'UTILISATION
 	# sh Remote-UseCase.sh
 
 
----------REALISATION DU CAS D'UTILISATION 
+---------LA DESCRIPTION DE LA REALISATION DU CAS D'UTILISATION 
 
 ---I   PRODUCER  
 
