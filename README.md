@@ -1,4 +1,65 @@
 # Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud
+
+---------GUIDE D'INSTALLATION 
+
+ETAPES A FAIRE POUR FAIRE MARCHER LE PROJET  :
+
+clone the project : 
+
+git clone https://github.com/Ghanouch/Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud.git
+
+
+I - LANCER LE DEPLOIEMENT ( README MEHDI)
+
+
+
+
+II - LANCER LE CAS D'UTILISATION
+
+	1- COPIER FICHIERS HOSTS + CLUSTER-INTERCONNEXTION + DEPLOY CLE  SUR  LE DOSSIER "AUTOMATISATION USE CASE"
+
+		#cd Path_to_Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud_project/AUTOMATISATION USE CASE
+
+		#cp DEPLOIEMENT/terraform/hosts .
+		#cp DEPLOIEMENT/terraform/deploy_cle .
+		#cp DEPLOIEMENT/terraform/cluster_interconnection_cle .
+
+	2- ENTRER SUR LE DOSSIER "AUTOMATISATION USE CASE"
+
+		2-1-Configurer l'ensemble des paramétres sur le fichier "UseCase.sh"
+
+			# PARAMS OF TOPIC CREATION 
+			TOPIC_NAME="NV_TOPIC"
+			REP_FACTOR="1"
+
+			# PARAMS OF PRODUCER JOB
+
+			LIEN_JOB_PRODUCER="https://docs.google.com/uc?export=download&id=1QO4hABoVMplr_IKkZA87BesDWcRdRCdy"
+			BORNE_MINIMAL="0"
+			BORNE_MAXIMAL="25"
+			SPEED="2"
+
+			# PARAMS OF CONSUMER 
+			LIEN_JOB_CONSUMER="https://docs.google.com/uc?export=download&id=1R56-3o1JJk2tlMgxGVHR-9vYZSZmgjkw"
+
+		 2-2.- METTRE SUR LE DOSSIER "AUTOMATISATION USE CASE" LE JOB DE CONSUMER 
+		 	DEUX CHOIX  : 
+
+		 		2.1 TELECHERGER LE JOB SUR LE LIEN SUIVANT :
+		 			http://www.mediafire.com/file/dd2dfyfkx9iyo9q/RDD_Crypto.jar
+
+		 		2.2 AVOIR LE JOB A PARTIR DU CODE SOURCE SUR LE DOSSIER : "CONSUMER/SparkKafka" PAR MAVEN 
+			 		 # cd CONSUMER/SparkKafka
+			 		 # mvn package 
+			 		 #copier le jar existant à CONSUMER/SparkKafka/target/ sur "AUTOMATISATION USE CASE"
+			 		 #le renomer à RDD_Crypto.jar
+
+
+	3- LANCER LE FLUX DE CAS D'UTILISATION sur "AUTOMATISATION USE CASE"
+	# cd "AUTOMATISATION USE CASE"
+	# sh Remote-UseCase.sh
+
+
 ---------REALISATION DU CAS D'UTILISATION 
 
 ---I   PRODUCER  
@@ -7,7 +68,6 @@
 
   2- Réalisation du Producer   :  
 		
-
  	- Cette réalisation permet de recevoir ( en streaming ) les données des Cryptomonnaie, pratiquer un filtrage avant de passer les résultats
  	 à un Kafka broker. Cela se fait en plusieurs étapes :
 
@@ -16,8 +76,7 @@
  	 	}
 
 	 	#B- FILTRAGE Des données récupérées
-		 		* Grace à Akka HTTP, nous pouvons récupérer Le flux de données ( JSON ) en Streaming, cela, nous permettra de pratiquer un 
-		 				filtrage basé sur le classement du cryptomonnaie actuel afin de se concentrer que sur une partie
+		 		* Grace à Akka HTTP, nous pouvons récupérer Le flux de données ( JSON ) en Streaming, cela, nous permettra de pratiquer un filtrage basé sur le classement du cryptomonnaie actuel afin de se concentrer que sur une partie
 		 				 ( par exemple : les 20 cryptomonnaies les plus classés ) 
        	
        	#C- Publication des résultats sur un TOPIC D'un  broker KAFKA 
