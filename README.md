@@ -1,10 +1,9 @@
-# Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud
+# Systèmes-Distribués-pour-le-Traitement-de-Données-sur-le-cloud
 
 ------------------------------ GUIDE D'INSTALLATION ET D'UTILISATION 
 
 Copier le projet sur votre rmachine : 
-#git clone https://github.com/Ghanouch/Systemes-Distribues-pour-le-Traitement-de-Donnees-sur-le-cloud.git
-
+#git clone https://github.com/Ghanouch/SDTD-SMACK-BIGDATA-CLOUD.git
 
 I - LANCER LE DEPLOIEMENT ( README MEHDI)
 
@@ -13,8 +12,8 @@ ENTRER SUR LE CHEMIN SUIVANT  :
 
 Guide d'utilisation du script:
 
-	1-Génerer 2 clé RSA une pour le bastion et l'autre pour le reste de la stack grâce à: "ssh-keygen"
-	  Vous pouvez choisir le nom que vous voulez, exemple : deployer et cluster_interconnection
+	1-Générer 2 clés RSA, une pour le bastion et l'autre pour le reste de la stack, grâce à: "ssh-keygen"
+	  Vous pouvez choisir pour les clés le nom que vous voulez, exemple : deployer et cluster_interconnection
 	  Elles doivent être mises dans le dossier "terraform"
 
 		#ssh-keygen
@@ -31,7 +30,7 @@ Guide d'utilisation du script:
 	  + cassandra_instance_type: la taille des machines cassandra (minimum medium)
 	  + opscenter_instace_type: la taille de la machine opscenter (minimum medium)
 
-	3-Ouvrir le fichier wrap-up.sh est remplir les champs indiqués (ceux des noms des clés privées)
+	3-Ouvrir le fichier wrap-up.sh et remplir les champs indiqués (ceux des noms des clés privées)
 
 	4-Lancer le script wrap-up.sh en sudo si possible (parfois il faut des droits d'administrateur)
 
@@ -40,7 +39,7 @@ Guide d'utilisation du script:
 
 II - LANCER LE CAS D'UTILISATION
 
-	1- COPIER LES FICHIERS SUIVANT :  hosts ET les deux clé générées ( cluster_interconnection_key,deploy_keyY )  QUI SONT SUR le dossier "DEPLOIEMENT/terraform", ET VEUILLEZ LES METTRE  SUR LE DOSSIER
+	1- COPIER LES FICHIERS SUIVANTS :  hosts ET les deux clé générées (nomées ici : deploy_key , cluster_interconnection_key )  QUI SONT DANS le dossier "DEPLOIEMENT/terraform", ET VEUILLEZ LES METTRE DANS LE DOSSIER
 	     "AUTOMATISATION USE CASE"
 
 		#cd SDTD-SMACK-BIGDATA-CLOUD/AUTOMATISATION USE CASE
@@ -49,9 +48,9 @@ II - LANCER LE CAS D'UTILISATION
 		#cp DEPLOIEMENT/terraform/deploy_cle .
 		#cp DEPLOIEMENT/terraform/cluster_interconnection_cle .
 
-	2- ENTRER SUR LE DOSSIER "AUTOMATISATION USE CASE"
+	2- ENTRER DANS LE DOSSIER "AUTOMATISATION USE CASE"
 
-		2-1-Configurer l'ensemble des paramétres sur le fichier "UseCase.sh"
+		2-1-Configurer l'ensemble des paramétres dans le fichier "UseCase.sh"
 
 			# PARAMS OF TOPIC CREATION 
 			TOPIC_NAME="NV_TOPIC"
@@ -64,21 +63,21 @@ II - LANCER LE CAS D'UTILISATION
 			SPEED="2"
 
 
-		 2-2.- METTRE SUR LE DOSSIER "AUTOMATISATION USE CASE" LE JOB DE CONSUMER 
+		 2-2.- METTRE DANS LE DOSSIER "AUTOMATISATION USE CASE" LE JOB DU CONSUMMER 
 
 		 	VOUS AVEZ DEUX CHOIX POUR L'AVOIR : 
 
-		 		2.1 TELECHERGER LE JOB QUI EST SUR LE LIEN SUIVANT :
+		 		2.1 TELECHERGER DEPUIS LE LIEN SUIVANT :
 		 			http://www.mediafire.com/file/dd2dfyfkx9iyo9q/RDD_Crypto.jar
 
-		 		2.2 AVOIR LE JOB A PARTIR DU CODE SOURCE SUR LE DOSSIER : "CONSUMER/SparkKafka" PAR MAVEN 
+		 		2.2 DIRECTEMENT A PARTIR DU CODE SOURCE DANS LE DOSSIER : "CONSUMER/SparkKafka" PAR MAVEN 
 			 		 # cd CONSUMER/SparkKafka
 			 		 # mvn package 
 			 		 #copier le jar existant à CONSUMER/SparkKafka/target/ sur "AUTOMATISATION USE CASE"
 			 		 #le renomer à RDD_Crypto.jar
 
 
-	3- LANCER LE FLUX DE CAS D'UTILISATION sur "AUTOMATISATION USE CASE"
+	3- LANCER LE SCRIPT DU USE CASE SITUE DANS LE DOSSIER "AUTOMATISATION USE CASE"
 	# cd "AUTOMATISATION USE CASE"
 	# sh Remote-UseCase.sh
 
@@ -91,16 +90,15 @@ II - LANCER LE CAS D'UTILISATION
 
   2- Réalisation du Producer   :  
 		
- 	- Cette réalisation permet de recevoir ( en streaming ) les données des Cryptomonnaie, pratiquer un filtrage avant de passer les résultats
- 	 à un Kafka broker. Cela se fait en plusieurs étapes :
+ 	- Cette réalisation permet de recevoir ( en streaming ) les données des Cryptomonnaies, les structurer et les filter et en fin les transmettre à un Kafka broker. Ceçi se fait en plusieures étapes :
 
- 	 	#A- LA RECUPERATION D'UN JSON EN AKKA HTTP (Préciser le point ou pk AKKA HTTP est choisi) { Voir GUIDE/Akka]}
-	 		* Un acteur de AKKA HTTP récupére un JSON à parti de l'URI suivant :  https://api.coinmarketcap.com/v1/ticker/ (la raison du choix s)
+ 	 	#A- LA RECUPERATION D'UN JSON EN AKKA HTTP (Préciser le point où pk AKKA HTTP est choisi) { Voir GUIDE/Akka }
+	 		* Un acteur de AKKA HTTP récupére un JSON à partir de l'URI suivant :  https://api.coinmarketcap.com/v1/ticker/ (la raison du choix s)
  	 	}
 
 	 	#B- FILTRAGE Des données récupérées
-		 		* Grace à Akka HTTP, nous pouvons récupérer Le flux de données ( JSON ) en Streaming, cela, nous permettra de pratiquer un filtrage basé sur le classement du cryptomonnaie actuel afin de se concentrer que sur une partie
-		 				 ( par exemple : les 20 cryptomonnaies les plus classés ) 
+		 	* Grâce à Akka HTTP, nous pouvons récupérer Le flux de données ( JSON ) en Streaming, cela, nous permettra de pratiquer un filtrage basé sur le classement actuel des cryptomonnaies afin de se concentrer que sur une partie
+		 				 ( par exemple : les 20 cryptomonnaies les mieux classées ) 
        	
        	#C- Publication des résultats sur un TOPIC D'un  broker KAFKA 
        			* Aprés avoir réalisé le filtrage, nous pouvons publier les résultats sur un ou plusieurs topics, lesquels nous sommes abonnés
@@ -109,11 +107,11 @@ II - LANCER LE CAS D'UTILISATION
 
   3- LANCEMENT DU JOB de Producer  :
 
-  	* Ce job prend 4 paramétres qui sont : 
+  	* Ce job prend 4 paramètres qui sont : 
 	 		A- Broker KAFKA     : l'URL du Kafka Broker
 	 		B- TOPIC CHOISI     : L'ensemble des topics choisis 
-	 		C- BORNE MINIMAL  : Le classement minimal du cryptomonnaie
-	 		D- BORNE MAXIMAL  : Le classement maximal du cryptomonnaie
+	 		C- BORNE MINIMAL    : Le classement minimal du cryptomonnaie
+	 		D- BORNE MAXIMAL    : Le classement maximal du cryptomonnaie
 	 		E- NOMBRE REQUETE par minute : C'est le nombre de JSON à récupérer par minute (cela permet de controler la vitesse de requetage )
 
   	* Example pour lancer le JOB : 	
